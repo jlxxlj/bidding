@@ -1,0 +1,730 @@
+
+
+
+
+
+
+<!doctype html>
+<html>
+<head>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>标讯库搜索(2013年之前标讯信息)_中国政府采购网</title>
+<link href="images/sytle.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="images/jquery-1.11.1.min.js"></script>
+<script language="javascript">
+
+
+
+function GetTwoDigit(arr) 
+{
+var v=arr;
+if(v>9)return v.toString(); 
+return "0"+v;
+}
+
+function showdate(n)
+{
+var uom = new Date(new Date()-0+n*86400000);
+uom = uom.getFullYear() + ":" + GetTwoDigit(uom.getMonth()+1) + ":" + GetTwoDigit(uom.getDate());
+return uom;
+}
+var myDate = new Date();
+var currentDate = myDate.getFullYear() + ":"+ GetTwoDigit(myDate.getMonth()+1) + ":" + GetTwoDigit(myDate.getDate());
+var time0  = currentDate;
+var time1w = showdate(-7);//近1周
+
+function dosearch(e){
+/*var value = document.searchForm.kw.value;
+if(value=="")
+{
+  alert("请输入检索词！");
+  return false;
+}*/
+if(e==""){e=1}
+$("#searchtype").val(e);
+$("#buyerName").val($("#inpBuyerName").val());
+$("#projectId").val($("#inpProjectId").val());
+$("#agentName").val($("#inpAgentName").val());
+document.searchForm.submit();
+}
+
+$("document").ready(function(){
+	
+	$("span[class='back']").click(function(){
+		window.location.href="dataB.jsp?searchtype=1&page_index=1&start_time="+time1w+"&end_time="+time0+"&timeType=2&searchchannel=0&dbselect=bidx&kw=&bidSort=0&pinMu=0&bidType=0&buyerName=&projectId=&displayZone=&zoneId=&agentName=";
+	});
+	
+	$("#notice_close").click(function(){
+		$("#notice").hide();
+	});
+
+	$("strong[rel=bxlx]").each(function(){
+	    var bidtype = $(this).text();
+	    if( bidtype == "bxlx001"){$(this).text("公开招标")}
+	    if( bidtype == "bxlx002"){$(this).text("询价公告")}
+	    if( bidtype == "bxlx003"){$(this).text("竞争性谈判")}
+	    if( bidtype == "bxlx004"){$(this).text("单一来源")}
+	    if( bidtype == "bxlx005"){$(this).text("资格预审")}
+	    if( bidtype == "bxlx006"){$(this).text("邀请公告")}
+	    if( bidtype == "bxlx007"){$(this).text("中标公告")}
+	    if( bidtype == "bxlx008"){$(this).text("更正公告")}
+	    if( bidtype == "bxlx009"){$(this).text("其他公告")}
+	    if( bidtype == "bxlx010"){$(this).text("竞价招标")}
+	    if( bidtype == "bxlx011"){$(this).text("竞价结果")}
+	});
+	
+	//zone点击
+	$("#inpDisplayZone").mouseover(function(){
+		$(this).css("cursor","pointer");
+	});
+	$("#inpDisplayZone").focus(function(){
+		$(this).css("cursor","pointer");
+		$(".zone_list_container").show();
+	});
+	$(".zone_list > li").mouseover(function(){
+		$(this).css({"background":"#ca0000","color":"#fff","cursor":"pointer"});
+	});
+	$(".zone_list > li").mouseout(function(){
+		$(this).css({"background":"#fff","color":"#777"});
+	});
+	$(".zone_list > li").click(function(){
+		var st= $(this).attr("zoneId");
+		var st2= $(this).text();
+		$("#zoneId").val(st);
+		$("#displayZone").val(st2);
+		$(".zone_list_container").hide();
+		$("#inpDisplayZone").val(st2);
+		$("#inpZoneId").val(st);
+		//doit
+		$("#buyerName").val($("#inpBuyerName").val());
+		$("#projectId").val($("#inpProjectId").val());
+		$("#agentName").val($("#inpAgentName").val());
+		//doit
+		document.searchForm.submit();
+	});
+	
+	//zone点击结束
+	
+	//cusTime开始
+	$("#cusTime").click(function(){
+		$("#datesel > li").hide();
+		$(".cusTime_container").show();		
+	});
+
+	$("#inpCusStartTime").click(function(){
+		if(self.gfPop)gfPop.fPopCalendar(document.getElementById("inpCusStartTime"));return false;
+		});
+	$("#inpCusEndTime").click(function(){
+		if(self.gfPop)gfPop.fPopCalendar(document.getElementById("inpCusEndTime"));return false;
+		});
+	$(".cusTime_container em.dose").click(function(){//先转换格式，后提交表格
+		var value1 = $("#inpCusStartTime").val();
+		var value2 = $("#inpCusEndTime").val();
+		if(value1=="" || value2=="")
+		{
+		  alert("请选择要查询的日期或选择其他时间选项！");
+		  return false;
+		}else{
+			$("#start_time").val(value1.replace(/-/g, ":"));
+			$("#end_time").val(value2.replace(/-/g, ":"));
+			$("#timeType").val("6");
+			//doit
+			$("#buyerName").val($("#inpBuyerName").val());
+			$("#projectId").val($("#inpProjectId").val());
+			$("#agentName").val($("#inpAgentName").val());
+			//doit
+			document.searchForm.submit();
+		}
+	});
+	//cusTime结束
+	//System.out.println(Long.toString(dS.getTime()));
+//	System.out.println(Long.toString(dE.getTime()));
+	//System.out.println(123);
+		
+	$("#datesel li").each(function(){
+		$(this).css("background","#fff");
+	});
+	
+	$("#datesel li").eq(6).css({"background":"#ca0000","color":"#fff"});
+	
+	$("#datesel li").not(":eq(6)").mouseover(function(){
+		$(this).css({"background":"#8a8a8a","color":"#fff","cursor":"pointer"});
+	});
+	$("#datesel li").not(":eq(6)").mouseout(function(){
+		$(this).css({"background":"#fff","color":"#555"});
+	});
+	var dateTy=6;
+	if(dateTy==6){
+		$("#datesel > li").hide();
+		$(".cusTime_container").show();
+		var custime1="2003:03:17";
+		var custime2="2003:03:17";
+		$("#inpCusStartTime").val(custime1.replace(/:/g, "-"));
+		$("#inpCusEndTime").val(custime2.replace(/:/g, "-"));
+	}
+	
+	
+	$("#searchbidTypeSel li").each(function(){
+		$(this).css("background","#fff");
+	});
+	
+	$("#searchbidTypeSel li").eq(7).css({"background":"#ca0000","color":"#fff"});
+	
+	
+	$("#searchbidTypeSel li").not(":eq(7)").mouseover(function(){
+		$(this).css({"background":"#8a8a8a","color":"#fff","cursor":"pointer"});
+	});
+	$("#searchbidTypeSel li").not(":eq(7)").mouseout(function(){
+		$(this).css({"background":"#fff","color":"#555"});
+	});
+	
+	
+	$("#searchBidSortSel li").each(function(){
+		$(this).css("background","#fff");
+	});
+	
+	$("#searchBidSortSel li").eq(0).css({"background":"#ca0000","color":"#fff"});
+	
+	$("#searchBidSortSel li").not(":eq(0)").mouseover(function(){
+		$(this).css({"background":"#8a8a8a","color":"#fff","cursor":"pointer"});
+	});
+	$("#searchBidSortSel li").not(":eq(0)").mouseout(function(){
+		$(this).css({"background":"#fff","color":"#555"});
+	});
+	
+	$("#searchPinMuSel li").each(function(){
+		$(this).css("background","#fff");
+	});
+	
+	$("#searchPinMuSel li").eq(0).css({"background":"#ca0000","color":"#fff"});
+	
+	$("#searchPinMuSel li").not(":eq(0)").mouseover(function(){
+		$(this).css({"background":"#8a8a8a","color":"#fff","cursor":"pointer"});
+	});
+	$("#searchPinMuSel li").not(":eq(0)").mouseout(function(){
+		$(this).css({"background":"#fff","color":"#555"});
+	});
+		
+	
+	
+	if($("#vT_bidSearch_o").css("display")=="none"){$(".vT-srch-result-channel-con").css("margin-top","0")};
+	//$(".vT-srch-result-list-bid li").mouseover(function(){
+	//	$(this).css("border","2px solid #ccc")
+	//});
+	//$(".vT-srch-result-list-bid li").mouseout(function(){
+	//	$(this).css("border","none")
+	//});
+	
+	$(".vT_search_sortby li:not(.current)").mouseover(function(){
+		$(this).css("background","#d0d0d0");
+		$(this).css("text-decoration","underline");
+		});
+	$(".vT_search_sortby li:not(.current)").mouseout(function(){
+		$(this).css("background","#ececec");
+		$(this).css("text-decoration","none");
+		});
+	
+	$('#inpBuyerName').bind('keypress',function(event){
+        if(event.keyCode == "13")    
+        {
+			//doit
+			$("#buyerName").val($("#inpBuyerName").val());
+			$("#projectId").val($("#inpProjectId").val());
+			$("#agentName").val($("#inpAgentName").val());
+			//doit
+            document.searchForm.submit();
+            
+        }
+    });
+	
+	$('#inpProjectId').bind('keypress',function(event){
+        if(event.keyCode == "13")    
+        {
+			//doit
+			$("#buyerName").val($("#inpBuyerName").val());
+			$("#projectId").val($("#inpProjectId").val());
+			$("#agentName").val($("#inpAgentName").val());
+			//doit
+            document.searchForm.submit();
+            
+        }
+    });
+	
+	$('#inpAgentName').bind('keypress',function(event){
+        if(event.keyCode == "13")    
+        {
+			//doit
+			$("#buyerName").val($("#inpBuyerName").val());
+			$("#projectId").val($("#inpProjectId").val());
+			$("#agentName").val($("#inpAgentName").val());
+			//doit
+            document.searchForm.submit();
+            
+        }
+    });
+	
+		
+		$("#start_time").val("2003:03:17");
+		$("#end_time").val("2003:03:17");
+		$("#timeType").val("6");
+		$("#searchtype").val("1");
+		$("#bidType").val("7");
+		$("#bidSort").val("0");
+		$("#pinMu").val("0");
+		
+//服务器端代码 注意js初始化也要处理服务器和本机
+	/*	$("#buyerName").val("");
+		$("#inpBuyerName").val("");
+		$("#projectId").val("");
+		$("#inpProjectId").val("");
+		$("#inpDisplayZone").val("");
+		$("#displayZone").val("");
+		$("#zoneId").val("");
+		$("#inpAgentName").val("");
+		$("#agentName").val("");
+		*/		
+		
+		$("#buyerName").val("");
+		$("#inpBuyerName").val("");
+		$("#projectId").val("");
+		$("#inpProjectId").val("");
+		$("#inpDisplayZone").val("");
+		$("#displayZone").val("");
+		$("#zoneId").val("");
+		$("#inpAgentName").val("");
+		$("#agentName").val("");
+		
+});
+function timeSel(e){
+	var myDate = new Date();
+	var currentDate = myDate.getFullYear() + ":"+ GetTwoDigit(myDate.getMonth()+1) + ":" + GetTwoDigit(myDate.getDate());
+	var time0  = currentDate;//今天
+	var time3d = showdate(-3);//近3日
+	var time1w = showdate(-7);//近1周
+	var time1m = showdate(-31);//近1月
+	var time3m = showdate(-92);//近3月
+	var time6m = showdate(-182);//近半年
+
+	if(e==0){$("#start_time").val(time0);
+	$("#end_time").val(time0);}
+	if(e==1){$("#start_time").val(time3d);
+	$("#end_time").val(time0);}
+	if(e==2){$("#start_time").val(time1w);
+	$("#end_time").val(time0);}
+	if(e==3){$("#start_time").val(time1m);
+	$("#end_time").val(time0);}
+	if(e==4){$("#start_time").val(time3m);
+	$("#end_time").val(time0);}
+	if(e==5){$("#start_time").val(time6m);
+	$("#end_time").val(time0);}
+	$("#timeType").val(e);
+	//doit
+	$("#buyerName").val($("#inpBuyerName").val());
+	$("#projectId").val($("#inpProjectId").val());
+	$("#agentName").val($("#inpAgentName").val());
+	//doit
+	document.searchForm.submit();
+	}
+function bidTypeSel(e){
+	$("#bidType").val(e);
+	//doit
+	$("#buyerName").val($("#inpBuyerName").val());
+	$("#projectId").val($("#inpProjectId").val());
+	$("#agentName").val($("#inpAgentName").val());
+	//doit
+	document.searchForm.submit();
+	}
+function bidSortSel(e){
+	$("#bidSort").val(e);
+	//doit
+	$("#buyerName").val($("#inpBuyerName").val());
+	$("#projectId").val($("#inpProjectId").val());
+	$("#agentName").val($("#inpAgentName").val());
+	//doit
+	document.searchForm.submit();
+	}
+function pinMuSel(e){
+	$("#pinMu").val(e);
+	//doit
+	$("#buyerName").val($("#inpBuyerName").val());
+	$("#projectId").val($("#inpProjectId").val());
+	$("#agentName").val($("#inpAgentName").val());
+	//doit
+	document.searchForm.submit();
+	}
+</script>
+</head>
+<body>
+
+<style>
+p.pager{float:right;margin-right:10px;margin-top:8px}
+.pager{margin:12px 12px 0 0; color:#444;border-bottom:1px solid #555; font:14px Verdana,"黑体";border:none;height:30px;}
+.pager a,.pager span,.pager input{float:left;padding:2px 5px;}
+.pager a{color:#0088CC; text-decoration:none;border:1px solid #ddd;margin-right:2px}
+.pager a:hover{border-bottom:2px solid #325594; color:#325594;background:#f5f5f5}
+.pager .prev,.pager .next,.pager .current{margin:0;;margin-right:2px;}
+.pager .prev,.pager .next{width:50px}
+.pager span.prev,.pager span.next{color:#888;}
+.pager .current{background:#0088cc; color:#fff;border:1px solid #0088cc}
+.pager input{border:1px solid #aaa;height:18px}
+</style>
+
+<script type="text/javascript">
+function Pager(settings){
+    var extend=function(tgt,src){
+        for(var p in src)
+            tgt[p]=src[p];
+        return tgt;
+    };
+    var cfg=extend({
+                   size:1,                                //页数
+                   current:0,                            //当前页码
+                   beforeEnd:2,                        //首尾最少显示页数
+                   visible:5,                            //中间可见页数
+                   prevLabel:'上一页',                
+                   nextLabel:'下一页',                
+                   ellipsis:'<span></span>',    //省略标记
+                   textboxEnabled:true,            //是否显示文本域
+                   showAlways:false                //总是显示分页器
+                   },settings || {});
+    
+    if(!cfg.showAlways && cfg.size==1)
+        return false;
+        
+    var prev=(cfg.size==1 || cfg.current==0)?
+                '<span class="prev">'+cfg.prevLabel+'</span>':
+                //'<a href="'+cfg.prefix+(cfg.current==1?'':'_'+(cfg.current-1))+'.'+cfg.suffix+'" class="prev">'+cfg.prevLabel+'</a>';
+                '<a href="?searchtype=1&page_index=0&buyerName=&projectId=&dbselect=bidx&kw=&start_time=2003%3A03%3A17&end_time=2003%3A03%3A17&timeType=6&bidSort=0&pinMu=0&bidType=7&displayZone=&zoneId=&agentName='+'" class="prev">'+cfg.prevLabel+'</a>';
+                
+    var next=(cfg.size==cfg.current+1)?
+                '<span class="next">'+cfg.nextLabel+'</span>':
+                '<a href="?searchtype=1&page_index=2&buyerName=&projectId=&dbselect=infox&kw=&start_time=2003%3A03%3A17&end_time=2003%3A03%3A17&timeType=6&bidSort=0&pinMu=0&bidType=7&displayZone=&zoneId=&agentName='+'" class="next">'+cfg.nextLabel+'</a>';
+    
+    var first=(cfg.current==0)?
+                '<span class="current">1</span>':
+                '<a href="?searchtype=1&page_index=1&dbselect=infox&kw=&buyerName=&projectId=&start_time=2003%3A03%3A17&end_time=2003%3A03%3A17&timeType=6&bidSort=0&pinMu=0&bidType=7&displayZone=&zoneId=&agentName='+'">1</a>';
+                
+    var p=function(s){
+        document.write(s);
+    };
+    
+    p(prev);
+    p(first);    
+    
+    if(cfg.size>1){
+        var generator=function(begin,end){
+            for(var i=begin;i<end;i++){
+                cfg.current == i?
+                p('<span class="current">'+(i+1)+'</span>'):
+                p('<a href="?searchtype=1&page_index='+(i+1)+'&dbselect=infox&kw=&buyerName=&projectId=&start_time=2003%3A03%3A17&end_time=2003%3A03%3A17&timeType=6&bidSort=0&pinMu=0&bidType=7&displayZone=&zoneId=&agentName='+'">'+(i+1)+'</a>');
+            }
+        };
+        
+        //visible定义区间计算
+        var posBegin=Math.max(0,cfg.current-(cfg.visible-Math.ceil(cfg.visible/2)));
+        var posEnd=Math.min(posBegin+cfg.visible,cfg.size);
+        //头部
+        generator(1,Math.min(cfg.beforeEnd,cfg.size));
+        //中间
+        if(cfg.current>=posBegin){
+            if(cfg.beforeEnd<posBegin)        p(cfg.ellipsis);
+            generator(Math.max(posBegin,cfg.beforeEnd),posEnd);
+        };
+        //尾部
+        if( posEnd!=cfg.size ){
+            if(cfg.size-cfg.beforeEnd>posEnd)        p(cfg.ellipsis);
+            generator(Math.max(cfg.size-cfg.beforeEnd,posEnd),cfg.size);        
+        }
+    };
+    p(next);
+    
+    if( cfg.textboxEnabled && cfg.size>cfg.beforeEnd*2+cfg.visible ){
+        jump="if(event.keyCode==13){var num=this.value;if(isNaN(num)||num<1||num>"+cfg.size+")alert('非法页码参数');else{num=num==1?'':+(num-1);location.href='?searchtype=1&page_index='+((num+1))+'&buyerName=&projectId=&dbselect=infox&kw=&start_time=2003%3A03%3A17&end_time=2003%3A03%3A17&timeType=6&bidSort=0&pinMu=0&bidType=7&agentName=&displayZone=&zoneId=';}}";
+        p('<input type="text" size="1" title="输入页码敲击回车键!" onkeypress="'+jump+'" />');
+    };
+}
+</script>
+<div class="nav_xc">
+	<div class="nav_xc_main">
+	    <div class="n_fl">财政部唯一指定政府采购信息网络发布媒体 国家级政府采购专业网站</div>
+        <div class="n_fr">服务热线：400-810-1996</div>
+    </div>
+</div>
+ <div class="vT_z" style="margin:5px auto;display:none" id="notice">
+    <div style="background:#ca0000;color:#fff;height:50px;width:100%;">
+	    <div style="text-align:center;line-height:50px">对不起，请您选择正确的时间！<span id="notice_close" style="cursor:pointer">[x关闭]</span></div>
+    </div>
+</div>
+<!--logo+搜索-->
+<style>
+.vT_search_sortby li{display:block;width:33.1%;height:30px;background:#ECECEC;border-right:1px solid #DFDFDF;border-bottom:1px solid #DFDFDF;float:left;font-size:14px;line-height:30px;text-align:center;color:#555}
+.vT_search_sortby li.current{background:#cc0000;color:#fff}
+.vT_search_sortby li.current a{color:#fff;text-decoration:none}
+.vT_search_sortby li a{color:#555;text-decoration:none}
+</style>
+<div class="vT_z">
+<div style="width:100%;background:#ccc">
+<ul class="vT_search_sortby">
+<li class="current" style="width:100%;height:50px;line-height:24px">标讯公告<br><span style="font-size:12px;line-height:18px">(2001年10月10日 至 2012年12月31日标讯信息)</span></li>
+</ul>
+</div>
+</div>
+<span class="blank37"></span>
+<div class="vT_z">
+	<div class="vT-srch-result-top">
+    	<div class="vT-srch-result-top-logo n_fl"><a href="http://www.ccgp.gov.cn"><img src="images/search_bid.jpg" style="border:0"></a></div>
+        <div class="vT-srch-result-top-form n_fr"><form name="searchForm" id="searchForm" action="dataBidOld.jsp" method="get">
+        <input type="hidden" name="searchtype" id="searchtype">
+        <input type="hidden" name="page_index" id="page_index" value="1">
+        <input type="hidden" name="bidSort" id="bidSort">
+        <input type="hidden" name="buyerName" id="buyerName">
+        <input type="hidden" name="projectId" id="projectId">
+        <input type="hidden" name="pinMu" id="pinMu">
+        <input type="hidden" name="bidType" id="bidType">
+        <input type="hidden" name="dbselect" value="bidx">
+        <input name="kw" id="kw" type="text" style="float:left;width:260px" value="" />
+        <input type="hidden" name="start_time" id="start_time">
+        <input type="hidden" name="end_time" id="end_time">
+        <input type="hidden" name="timeType" id="timeType">
+        <input type="hidden" name="displayZone" id="displayZone">
+        <input type="hidden" name="zoneId" id="zoneId">
+        <input type="hidden" name="agentName" id="agentName"><input type="button" value="搜标题" id="doSearch1" onclick="dosearch(1)" style="font-size:14px;font-weight:bolder;width:70px;background:#cc0000;color:#fff;float:left;height:34px" /><input type="button" value="搜全文" id="doSearch2" onclick="dosearch(2)" style="font-size:14px;font-weight:bolder;width:70px;background:#cc0000;color:#fff;float:left;height:34px" /></form></div>
+    </div>
+    </div>
+</div>
+<!---->
+<span class="blank10"></span>
+<style>
+.vT_bidSearch_outsider{width:100%}
+.vT_bidSearch_addon_con{width:100%;border-bottom:1px dotted #ccc}
+.vT_bidSearch_addon_block{width:240px;height:50px;float:left;margin-left:30px;}
+.vT_bidSearch_addon_block2{width:80px;height:50px;float:left;margin-left:30px;}
+.vT_bidSearch_addon_block2 p,.vT_bidSearch_addon_block p{width:80px;text-align:right;font-size:14px;font-weight:bolder;color:#6a6a6a;display:block;margin-right:10px;float:left;margin-top:13px;height:30px}
+.vT_bidSearch_addon_block input{font-size:16px;width:130px;line-height:20px;height:21px;margin-top:8px; border:1px solid #c7d8e3;}
+.vT-srch-result-channel-list3 li,.vT-srch-result-channel-list2 li{margin-left:25px;display:block;float:left;width:90px;height:20px;font-size:14px;color:#6a6a6a;margin-bottom:10px;text-align:center}
+.vT-srch-result-channel-list3 li{width:90px}
+</style>
+<div class="vT_z" id="vT_bidSearch_o">
+	<div class="vT_bidSearch_outsider">
+	<!--选择内容-->
+    <div class="vT_bidSearch_addon_con" style="margin-top:20px">
+        	<div class="vT_bidSearch_addon_block2" style="margin-left:0;float:left;"><p style="vertical-align:top;margin-top:0;padding-top:0">类型</p></div>
+            <div style="float:left;width:870px;height:60px">
+            <ul class="vT-srch-result-channel-list2" id="searchbidTypeSel">
+            		<li onclick="bidTypeSel(0)">所有类型</li>
+                    <li onclick="bidTypeSel(1)">公开招标</li>
+                    <li onclick="bidTypeSel(2)">询价公告</li>
+                    <li onclick="bidTypeSel(3)">竞争性谈判</li>
+                    <li onclick="bidTypeSel(4)">单一来源</li>
+                    <li onclick="bidTypeSel(5)">资格预审</li>
+                    <li onclick="bidTypeSel(6)">邀请公告</li>
+                    <li onclick="bidTypeSel(7)">中标公告</li>
+                    <li onclick="bidTypeSel(8)">更正公告</li>
+                    <li onclick="bidTypeSel(9)">其他公告</li>
+                    <li onclick="bidTypeSel(10)">竞价招标</li>
+                    <li onclick="bidTypeSel(11)">竞价结果</li>
+                </ul></div>
+            <div style="clear:both"></div>
+        </div>
+   		<!--选择内容-->
+    <div class="vT_bidSearch_addon_con">
+        	<div class="vT_bidSearch_addon_block2" style="margin-left:0;float:left;"><p style="vertical-align:top;margin-top:0;padding-top:15px">类别</p></div>
+            <div style="float:left;width:870px;height:30px;margin-top:15px">
+            <ul class="vT-srch-result-channel-list3" id="searchBidSortSel">
+            		<li onclick="bidSortSel(0)">所有类别</li>
+                    <li onclick="bidSortSel(1)">中央公告</li>
+                    <li onclick="bidSortSel(2)">地方公告</li>
+                </ul></div>
+            <div style="clear:both"></div>
+        </div>
+        <!--选择内容-->
+    <div class="vT_bidSearch_addon_con">
+        	<div class="vT_bidSearch_addon_block2" style="margin-left:0;float:left;"><p style="vertical-align:top;margin-top:0;padding-top:15px">品目</p></div>
+            <div style="float:left;width:870px;height:30px;margin-top:15px">
+            <ul class="vT-srch-result-channel-list3" id="searchPinMuSel">
+            		<li onclick="pinMuSel(0)">所有品目</li>
+                    <li onclick="pinMuSel(1)">货物类</li>
+                    <li onclick="pinMuSel(2)">工程类</li>
+                    <li onclick="pinMuSel(3)">服务类</li>
+                </ul></div>
+            <div style="clear:both"></div>
+        </div>
+        <!--选择内容-->
+    <div class="vT_bidSearch_addon_con">
+        	<div class="vT_bidSearch_addon_block2" style="margin-left:0;float:left;"><p style="vertical-align:top;margin-top:0;padding-top:15px">时间</p></div>
+            <div style="float:left;width:870px;height:30px;margin-top:15px;position:relative">
+            <ul class="vT-srch-result-channel-list3" id="datesel">
+                    <li id="cusTime">指定时间</li>
+                </ul><div class="cusTime_container" style="display:block"><span>指定时间</span><input type="text" name="inpCusStartTime" id="inpCusStartTime" readonly="readonly" /><input type="text" name="inpCusEndTime" id="inpCusEndTime" readonly="readonly" /><em class="dose" title="提交日期" ></em><span class="inf">您正在查询2013年之前的标讯信息，单击返回可查询最近标讯。</span><span class="back">返回</span></div></div>
+            <div style="clear:both"></div>
+        </div>
+       <!--输入内容-->
+    	<div class="vT_bidSearch_addon_con">
+        	<div class="vT_bidSearch_addon_block" style="margin-left:0"><p>采购人</p><input type="text" name="inpBuyerName" id="inpBuyerName"></div>
+            <div class="vT_bidSearch_addon_block"><p>项目编号</p><input type="text" name="inpProjectId" id="inpProjectId"></div>
+<style>
+#zonearea{position:relative}
+.zone_list_container{position:absolute;width:350px;background:#fff;border:1px solid #c7d8e3;z-index:999;margin-left:90px;margin-top:-1px;padding:0 0 5px 5px;display:none}
+ul.zone_list li{ width:45px;float:left;height:26px;margin:5px 0 0 0;line-height:26px;padding-left:5px;color:#777}
+
+.cusTime_container{width:720px;background:#fff;display:block;height:28px;position:absolute;top:0;left:25px;height:30px;background: url("images/tick.gif") no-repeat;background-position:372px 0;}
+.cusTime_container input{font-size:16px;width:130px;line-height:20px;height:21px; border:1px solid #c7d8e3;float:left;cursor:pointer}
+.cusTime_container span{background:#ca0000;color:#fff;cursor:pointer;width:90px;height:24px;float:left;font-size:14px;text-align:center;line-height:24px;margin-right:10px}
+.cusTime_container span.back{background:#0000ca;color:#fff;cursor:pointer;width:45px;height:24px;font-size:14px;text-align:center;line-height:24px;}
+.cusTime_container span.inf{background:#eee;color:#333;width:240px;height:36px;font-size:12px;text-align:left;line-height:18px;margin-top:-8px;padding-left:5px;padding-right:5px;cursor:normal}
+.cusTime_container em{width:18px;height:20px;display:block;float:left;margin-left:5px;margin-top:3px;cursor:pointer}
+.cusTime_container em.dose{margin-left:8px;margin-right:10px}
+.cusTime_container em.clos{margin-left:8px;margin-right:15px}
+
+#inpCusStartTime{border-right:none}
+</style>
+            <div class="vT_bidSearch_addon_block" id="zonearea"><p>地区</p><input type="text" name="inpDisplayZone" id="inpDisplayZone" readonly="readonly"><input type="hidden" name="inpZoneId" id="inpZoneId"><div class="zone_list_container">
+<ul class="zone_list" zoneId=""><li>全部</li>
+<li zoneId="11%">北京市</li>
+<li zoneId="12%">天津市</li>
+<li zoneId="13%">河北省</li>
+
+<li zoneId="14%">山西省</li>
+<li zoneId="15%">内蒙古</li>
+<li zoneId="21% not 210200">辽宁省</li>
+<li zoneId="2102%">大连市</li>
+<li zoneId="22%">吉林省</li>
+<li zoneId="23%">黑龙江</li>
+<li zoneId="31%">上海市</li>
+<li zoneId="32%">江苏省</li>
+
+<li zoneId="33% not 330200">浙江省</li>
+<li zoneId="3302%">宁波市</li>
+<li zoneId="34%">安徽省</li>
+<li zoneId="35% not 350200">福建省</li>
+<li zoneId="3502%">厦门市</li>
+<li zoneId="36%">江西省</li>
+
+<li zoneId="37% not 370200">山东省</li>
+<li zoneId="3702%">青岛市</li>
+<li zoneId="41%">河南省</li>
+<li zoneId="42%">湖北省</li>
+<li zoneId="43%">湖南省</li>
+<li zoneId="44% not 440300">广东省</li>
+
+<li zoneId="4403%">深圳市</li>
+<li zoneId="45%">广西省</li>
+<li zoneId="46%">海南省</li>
+<li zoneId="50%">重庆市</li>
+<li zoneId="51%">四川省</li>
+<li zoneId="52%">贵州省</li>
+
+<li zoneId="53%">云南省</li>
+<li zoneId="54%">西藏</li>
+<li zoneId="61%">陕西省</li>
+<li zoneId="62%">甘肃省</li>
+<li zoneId="63%">青海省</li>
+<li zoneId="64%">宁夏</li>
+
+<li zoneId="65%">新疆</li>
+<li zoneId="71%">台湾省</li>
+<li zoneId="81%">香港</li>
+<li zoneId="82%">澳门</li></ul></div></div>
+            <div class="vT_bidSearch_addon_block" style="margin-left:0"><p>代理机构</p><input type="text" name="inpAgentName" id="inpAgentName"></div>
+            <!--div class="vT_bidSearch_addon_block"><p>排除关键字</p><input type="text" name=""></div-->
+            <!--div class="vT_bidSearch_addon_block"><p>所属行业</p><input type="text" name=""></div-->
+            <div style="clear:both"></div>
+        </div>
+        <div style="clear:both"></div>
+    </div>
+</div>
+<span class="blank20"></span>
+<!---->
+<div class="vT_z">
+<div style="width:100%;height:30px">
+<div style="font-size:14px"><p style="float:left">关键字：<span style="color:#c00000;font-weight:bolder"></span> 标题检索
+ 共找到 <span style="color:#c00000">3
+</span> 条内容 查询日期从 <span style="color:#c00000">2003-03-17</span> 到 <span style="color:#c00000">2003-03-17</span></p><p class="pager">
+<script language="javascript">Pager({size:0, current:0, prefix:'data2',suffix:'.jsp&'});</script></p>
+</div>
+</div>
+<!--div class="vT_z">
+	<div class="vT-srch-condition">
+        <p>搜索条件：</p><ul class="vT-srch-condi">
+            <li>北京市</li>
+            <li>丰台区</li>
+        </ul>
+    </div>
+</div-->
+<span class="blank10"></span>
+<div class="vT_z" style="position:relative">
+    <div class="vT-srch-result">
+        <div class="vT-srch-result-list-con2">
+            <div class="vT-srch-result-list">
+                <ul class="vT-srch-result-list-bid">
+
+		<li><a href="bidDetailShow.jsp?bidDoc=567378"  style="line-height:18px"  target="_blank">宁夏自治区政府采购草原防火及公路动物检查站仪器设备中标公告</a>
+        <p></p>
+        <span>2003.03.17 00:00:00
+ | 采购人：
+ | 代理机构：
+<br /><strong style="font-weight:bolder" rel="bxlx">bxlx007</strong> | <a href="">
+</a> | <!-- a href="567378
+">本地页面</a--> | <strong style="font-weight:bolder">地方公告</strong> |> </span></li>
+
+		<li><a href="bidDetailShow.jsp?bidDoc=567380"  style="line-height:18px"  target="_blank">天长市政府采购中心采购电脑询价结果公告</a>
+        <p></p>
+        <span>2003.03.17 00:00:00
+ | 采购人：
+ | 代理机构：
+<br /><strong style="font-weight:bolder" rel="bxlx">bxlx007</strong> | <a href="">
+</a> | <!-- a href="567380
+">本地页面</a--> | <strong style="font-weight:bolder">地方公告</strong> |> </span></li>
+
+		<li><a href="bidDetailShow.jsp?bidDoc=567381"  style="line-height:18px"  target="_blank">2002年素质教育配套工程及中职工程教学仪器设备政府采购项目中标结果</a>
+        <p></p>
+        <span>2003.03.17 00:00:00
+ | 采购人：
+ | 代理机构：
+<br /><strong style="font-weight:bolder" rel="bxlx">bxlx007</strong> | <a href="">
+</a> | <!-- a href="567381
+">本地页面</a--> | <strong style="font-weight:bolder">地方公告</strong> |> </span></li>
+                  
+                </ul>
+            <!---->
+            
+<p class="pager">
+<script language="javascript">Pager({size:0, current:0, prefix:'data2',suffix:'.jsp&'});</script></p></div>
+            <!---->
+        <div class="vT-srch-result-page-con"></div>
+    </div>
+</div>
+</div>
+</div>
+
+<span class="blank37"></span>
+<div class="vT_nav_cp">
+	<div class="vT_z">
+    	<div class="vT_b_c vT_cp"><p><span>&copy; 1999-<script language="javascript">
+var myDate = new Date();
+document.write(myDate.getFullYear());
+</script></span> 中华人民共和国财政部版权所有 | <a href="http://www.ccgp.gov.cn/contact.shtml" target="_blank">联系我们</a> | <a href="mailto:feedback@ccgp.gov.cn">意见反馈</a> | <a href="http://www.miibeian.gov.cn" target="_blank">京<span>ICP</span>备<span>10046031</span>号<span>-10</span></a></p>
+        </div>
+    </div>
+</div>
+<script language="javascript" src="http://www.ccgp.gov.cn/images/sa.js"></script>
+<script type="text/javascript" src="images/fixdiv.js"></script>
+<script type="text/javascript" src="images/address.js"></script>
+<iframe width=199 height=178 name="gToday:normal:agenda.js" id="gToday:normal:agenda.js" src="week2/ipopeng.htm" scrolling="no" frameborder="0" style="visibility:visible; z-index:999; position:absolute; top:-500px; left:-500px;">
+</iframe>
+<!--[if IE 6]>
+<script language="javascript" src="images/DD_belatedPNG_0.0.8a-min.js"></script>
+<script>
+  /* EXAMPLE */
+  DD_belatedPNG.fix('.c_list li,.vT_R_clist li');
+  
+  /* string argument can be any CSS selector */
+  /* .png_bg example is unnecessary */
+  /* change it to what suits you! */
+</script>
+<![endif]-->
+<>
+</body>
+</html>

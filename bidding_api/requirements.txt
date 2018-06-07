@@ -1,0 +1,19 @@
+bs4
+boto3
+tornado==4.3
+xtls
+elasticsearch==2.1.0
+jieba==0.37
+fuzzywuzzy==0.8.0
+pika==0.10.0
+readability-lxml
+pyquery
+-e git+https://git.oschina.net/socialcredits/social-credits-py.git#egg=Package
+psycopg2
+cassandra-driver
+python-dateutil
+pyquery
+chardet
+html5lib
+kafka-python
+

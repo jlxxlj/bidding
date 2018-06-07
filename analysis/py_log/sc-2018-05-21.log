@@ -1,0 +1,8 @@
+[2018-05-21 17:03:28,020] [WARNING] [MainThread:140267451651904] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
+[2018-05-21 17:06:02,592] [WARNING] [MainThread:139642616416064] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
+[2018-05-21 17:09:32,145] [WARNING] [MainThread:140449029273408] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
+[2018-05-21 17:14:44,017] [WARNING] [MainThread:139800394438464] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
+[2018-05-21 17:15:23,580] [WARNING] [MainThread:140406186055488] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
+[2018-05-21 17:17:11,499] [WARNING] [MainThread:140664701089600] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
+[2018-05-21 17:18:38,057] [WARNING] [MainThread:139939345037120] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
+[2018-05-21 17:19:19,416] [WARNING] [MainThread:139800671463232] [blas_headers.py:988] [] - Using NumPy C-API based implementation for BLAS functions.
